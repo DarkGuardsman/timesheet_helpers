@@ -4,13 +4,14 @@
   "description": "Used to take markdown tables and convert them into usable timesheets",
   "scripts": {
     "start": "node src/index.mjs",
-    "test": "jest --coverage --watchAll=false",
+    "test": "jest ./src --coverage --watchAll=false --config=jest.config.js",
     "lint:check": "./node_modules/.bin/eslint src --debug",
     "lint:fix": "./node_modules/.bin/eslint src --fix"
   },
   "main": "src/index.mjs",
   "license": "ARR",
   "dependencies": {
+    "date-and-time": "^2.0.0",
     "https": "^1.0.0",
     "lodash": "^4.17.21",
     "minimist": "^1.2.5",
@@ -18,9 +19,9 @@
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",
-    "@babel/core": "^7.6.2",
+    "@babel/core": "^7.15.5",
     "@babel/node": "^7.6.2",
-    "@babel/preset-env": "^7.6.2",
+    "@babel/preset-env": "^7.15.4",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",

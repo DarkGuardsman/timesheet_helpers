@@ -1,10 +1,14 @@
-// For a detailed explanation regarding each configuration property, visit:
-// https://jestjs.io/docs/en/configuration.html
 module.exports = {
-  coverageDirectory: "coverage",
-  "collectCoverageFrom": [
-    "src/**/*.{js,jsx,ts,tsx}",
-    "!src/**/*.d.ts"
-  ],
-  testEnvironment: "node",
+    moduleFileExtensions: ["js", "json", "jsx", "ts", "tsx", "json", "mjs"],
+    transform: {
+        '^.+\\.(js|jsx|mjs)?$': 'babel-jest'
+    },
+    testEnvironment: 'node',
+    moduleNameMapper: {
+        '^@/(.*)$': '<rootDir>/$1'
+    },
+    testMatch: [
+        '<rootDir>/**/*.test.(js|jsx|ts|tsx|mjs)', '<rootDir>/(tests/unit/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx|mjs))'
+    ],
+    transformIgnorePatterns: ['<rootDir>/node_modules/']
 };
