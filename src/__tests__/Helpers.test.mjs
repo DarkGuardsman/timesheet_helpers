@@ -26,6 +26,14 @@ describe('formatTime', () => {
         ["   1:00 am   ", "1:00:00 AM", []],
         ["   1:00 pm   ", "1:00:00 PM", []],
 
+        //Check it can handle lack of spacing between time and AM/PM
+        ["1am", "1:00:00 AM", []],
+        ["1pm", "1:00:00 PM", []],
+        ["1:00am", "1:00:00 AM", []],
+        ["1:00pm", "1:00:00 PM", []],
+        ["1:00:00am", "1:00:00 AM", []],
+        ["1:00:00pm", "1:00:00 PM", []],
+
         //Actual examples
         [" 7:00 AM ", "7:00:00 AM", []],
         [" 1:15 PM ", "1:15:00 PM", []],

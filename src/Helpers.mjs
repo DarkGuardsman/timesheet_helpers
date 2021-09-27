@@ -1,5 +1,14 @@
 import date from 'date-and-time'
 
+const timeFormatsToTry = [
+    'h:mm:ss A', //1:00:00 PM
+    'h:mm:ssA', //1:00:00PM
+    'h:mm A', //1:00 PM
+    'h:mmA', //1:00PM
+    'h A', //1 PM
+    'hA' //1 PM
+]
+
 /**
  * Formats time so it imports into excel like programs properly
  *
@@ -17,24 +26,31 @@ export function formatTime(timeIn) {
     //Preformat time to cleanup extra leading and trailing... as well convert to upper case for things like 'am -> AM'
     const time = timeIn.trim().toUpperCase();
     if(time !== '-' && time !== '') {
+        //Try to parse the time
+        const timeObject = tryToParseTime(time);
 
-        //Try 1: hour, minutes, seconds
-        let timeObject = date.parse(time, 'h:mm:ss A');
         if(isNaN(timeObject)) {
-
-            //Try 2: hour, minutes
-            timeObject = date.parse(time, 'h:mm A');
-            if(isNaN(timeObject)) {
-
-                //Try 3: hour only
-                timeObject = date.parse(time, 'h A');
-                if(isNaN(timeObject)) {
-                    return `Err: ${time}`;
-                }
-            }
+            return `Err: ${timeIn}`
         }
 
         return date.format(timeObject, 'h:mm:ss A');
     }
     return time;
+}
+
+/**
+ * Uses a series of formats in an attempt to parse the time
+ *
+ * @param {String} timeIn - string to parse
+ * @return {Date} output
+ */
+function tryToParseTime(timeIn) {
+    let timeObject;
+    for(const format of timeFormatsToTry) {
+        timeObject = date.parse(timeIn, format);
+        if(!isNaN(timeObject)) {
+            return timeObject;
+        }
+    }
+    return new Date(NaN);
 }

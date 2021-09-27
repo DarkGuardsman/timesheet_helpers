@@ -7,15 +7,15 @@ console.log('Args', process.argv);
 const argv = minimist(process.argv.slice(2));
 
 //Arguments
-const fileIn = argv.input;
-const fileOut = argv.output;
+const fileInPath = argv.input;
+const fileOutPath = argv.output;
 
-console.log('INPUT', fileIn);
+console.log('INPUT', fileInPath);
 
 try {
 
     //Load file and convert to lines
-    const rawFile = fileSystem.readFileSync(fileIn, 'utf8');
+    const rawFile = fileSystem.readFileSync(fileInPath, 'utf8');
     const lines = rawFile.split("\n");
 
 
@@ -31,7 +31,7 @@ try {
         const type = cells[2];
         const project = cells[3];
 
-        //Time units need to be formatted from 10:00pm to 10:00:00 PM
+        //Time units need to be formatted from 10:00 pm to 10:00:00 PM
         const startTime = formatTime(cells[4]);
         const endTime = formatTime(cells[5]);
 
@@ -40,7 +40,7 @@ try {
         outputLines += "\n";
     });
 
-    fileSystem.writeFileSync(fileOut, outputLines)
+    fileSystem.writeFileSync(fileOutPath, outputLines)
 
 } catch (err) {
     console.error(err);
