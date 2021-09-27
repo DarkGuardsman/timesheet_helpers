@@ -1,5 +1,5 @@
 import {formatTime} from "../Helpers.mjs";
-import {consoleErrorsMatches, mockConsoleError, unmockConsoleError} from "./test_setup.js";
+import {consoleErrorsMatches, mockConsoleError, unmockConsoleError} from "../../test_setup";
 
 describe('formatTime', () => {
     const testCases = [
