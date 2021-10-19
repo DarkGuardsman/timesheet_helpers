@@ -7,13 +7,14 @@ console.log('Args', process.argv);
 const argv = minimist(process.argv.slice(2));
 
 //Arguments
-const fileInPath = argv.input;
+const filesInPath = argv.input.split(",");
 const fileOutPath = argv.output;
 
-console.log('INPUT', fileInPath);
+console.log('INPUT', filesInPath);
+console.log('OUTPUT', fileOutPath);
 
 try {
-    const timeEntries = loadFileAsObjects(fileInPath);
+    const timeEntries = filesInPath.flatMap(path => loadFileAsObjects(path));
     writeFileFromObject(fileOutPath, timeEntries);
 
 } catch (err) {
