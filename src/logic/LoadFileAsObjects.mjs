@@ -25,6 +25,7 @@ export function loadFileAsObjects(filePathIn) {
 
     return {
         file: filePathIn,
+        date,
         timeEntries,
         timeStart: timeEntries[0].startTime,
         timeEnd: timeEntries[timeEntries.length - 1].endTime,

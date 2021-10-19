@@ -8,14 +8,14 @@ const argv = minimist(process.argv.slice(2));
 
 //Arguments
 const filesInPath = argv.input.split(",");
-const fileOutPath = argv.output;
+const outputFilePath = argv.outputPath.trim();
+const outputFileName = argv.outputName.trim();
 
 console.log('INPUT', filesInPath);
-console.log('OUTPUT', fileOutPath);
 
 try {
     const timeEntries = loadMultiFileAsObjects(filesInPath);
-    writeFileFromObject(fileOutPath, timeEntries);
+    writeFileFromObject(outputFilePath, outputFileName, timeEntries);
 
 } catch (err) {
     console.error(err);
