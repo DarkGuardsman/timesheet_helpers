@@ -11,6 +11,10 @@ const filesInPath = argv.input.split(",");
 const outputFilePath = argv.outputPath.trim();
 const outputFileName = argv.outputName.trim();
 
+if(outputFileName.indexOf("/") !== -1) {
+    throw new Error("Output name contains file path '/'");
+}
+
 console.log('INPUT', filesInPath);
 
 try {
