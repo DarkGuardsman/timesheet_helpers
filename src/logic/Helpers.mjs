@@ -1,5 +1,6 @@
 import date from 'date-and-time'
 
+export const outputFormat = 'h:mm:ss A';
 const timeFormatsToTry = [
     'h:mm:ss A', //1:00:00 PM
     'h:mm:ssA', //1:00:00PM
@@ -33,7 +34,7 @@ export function formatTime(timeIn) {
             return `Err: ${timeIn}`
         }
 
-        return date.format(timeObject, 'h:mm:ss A');
+        return date.format(timeObject, outputFormat);
     }
     return time;
 }

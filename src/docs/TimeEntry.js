@@ -7,4 +7,6 @@
  * @property {String} project - billable area
  * @property {String} startTime - starting time 'h:mm:ss A'
  * @property {String} endTime - ending time 'h:mm:ss A'
+ * @property {Number} timeAsMinutes - time passed as minutes
+ * @property {Number} timeAsHours - time passed as hours, same as minutes
  */

@@ -1,5 +1,5 @@
 import minimist from 'minimist'
-import loadFileAsObjects from "./logic/LoadFileAsObjects.mjs";
+import {loadMultiFileAsObjects} from "./logic/LoadFileAsObjects.mjs";
 import writeFileFromObject from "./logic/WriteFileFromObject.mjs";
 
 console.log('Args', process.argv);
@@ -14,7 +14,7 @@ console.log('INPUT', filesInPath);
 console.log('OUTPUT', fileOutPath);
 
 try {
-    const timeEntries = filesInPath.flatMap(path => loadFileAsObjects(path));
+    const timeEntries = loadMultiFileAsObjects(filesInPath);
     writeFileFromObject(fileOutPath, timeEntries);
 
 } catch (err) {

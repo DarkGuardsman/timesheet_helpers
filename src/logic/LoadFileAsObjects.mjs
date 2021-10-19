@@ -1,16 +1,35 @@
 import fileSystem from "fs";
-import {formatTime} from "./Helpers.mjs";
+import dateTime from 'date-and-time'
+import {sum} from "lodash";
+import {formatTime, outputFormat} from "./Helpers.mjs";
+
+/**
+ * Loads the list of file from I/O, processes the data, and converts to objects for use.
+ * @param {Array.<String>} filesInPath - locations on I/O
+ * @return {Array.<DayEntry>} Loaded lines
+ */
+export function loadMultiFileAsObjects(filesInPath) {
+    return filesInPath.map(path => loadFileAsObjects(path));
+}
 
 /**
  * Loads the file from I/O, processes the data, and converts to objects for use.
  * @param {String} filePathIn - location on I/O
- * @return {Array.<TimeEntry>} Loaded lines
+ * @return {DayEntry} Loaded lines
  */
-export default function loadFileAsObjects(filePathIn) {
+export function loadFileAsObjects(filePathIn) {
     const rawLines = loadFileAsLines(filePathIn);
-    const date = filePathIn.substring(filePathIn.lastIndexOf("/"), filePathIn.length);
-    //TODO write logic to extract time table from normal notes
-    return processTimeTracking(date, rawLines);
+    const date = filePathIn.substring(filePathIn.lastIndexOf("/") + 1, filePathIn.lastIndexOf(".md"));
+
+    const timeEntries = processTimeTracking(date, rawLines);
+
+    return {
+        file: filePathIn,
+        timeEntries,
+        timeStart: timeEntries[0].startTime,
+        timeEnd: timeEntries[timeEntries.length - 1].endTime,
+        totalHours: sum(timeEntries.map(entry => entry.timeAsMinutes))  / 60
+    }
 }
 
 /**
@@ -37,6 +56,7 @@ function processTimeTracking(date, lines) {
     }
 
     //TODO process to check for invalid projects
+    //TODO check for time bleeding over into the next day Ex: 11:00pm - 1:20 am
 
     return lineObjects
 }
@@ -74,6 +94,11 @@ function processTimeTrackingLine(date, line, index) {
     const startTime = formatTime(cells[4]);
     const endTime = formatTime(cells[5]);
 
+    //Calculate time passed as minutes
+    const startTimeObject = dateTime.parse(startTime, outputFormat);
+    const endTimeObject = dateTime.parse(endTime, outputFormat);
+    const timeDelta = (endTimeObject.getTime() - startTimeObject.getTime()) / (1000 * 60); // 1000 -> ms to s, 60 -> s to minutes
+
     return {
         index,
         event,
@@ -81,7 +106,9 @@ function processTimeTrackingLine(date, line, index) {
         project,
         date,
         startTime,
-        endTime
+        endTime,
+        timeAsHours: timeDelta / 60,
+        timeAsMinutes: timeDelta
     }
 }
 
