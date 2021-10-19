@@ -1,6 +1,6 @@
 import fileSystem from "fs";
 import dateTime from 'date-and-time'
-import {sum} from "lodash";
+import {sum, groupBy} from "lodash";
 import {formatTime, outputFormat} from "./Helpers.mjs";
 
 /**
@@ -21,16 +21,44 @@ export function loadFileAsObjects(filePathIn) {
     const rawLines = loadFileAsLines(filePathIn);
     const date = filePathIn.substring(filePathIn.lastIndexOf("/") + 1, filePathIn.lastIndexOf(".md"));
 
+    //Collect entry objects
     const timeEntries = processTimeTracking(date, rawLines);
+
+    //Convert to project entries
+    const projectHours = processProjectTimes(timeEntries)
 
     return {
         file: filePathIn,
         date,
         timeEntries,
+        projectHours,
         timeStart: timeEntries[0].startTime,
         timeEnd: timeEntries[timeEntries.length - 1].endTime,
-        totalHours: sum(timeEntries.map(entry => entry.timeAsMinutes))  / 60
+        totalHours: sum(timeEntries.map(entry => entry.timeAsHours))
     }
+}
+
+/**
+ * Summarizes the time entries by project
+ *
+ * @param {Array.<TimeEntry>} timeEntries
+ * @return {Array.<ProjectEntry>} project entries
+ */
+function processProjectTimes(timeEntries) {
+    const asProjects = timeEntries.map(entry => {
+        return {
+            name: entry.project.toLowerCase(),
+            hours: entry.timeAsHours
+        }
+    });
+    const projectMap = groupBy(asProjects, "name");
+    return Object.keys(projectMap).map(key => {
+        const hours = sum(projectMap[key].map(etr => etr.hours));
+        return {
+            name: key,
+            hours
+        }
+    })
 }
 
 /**
