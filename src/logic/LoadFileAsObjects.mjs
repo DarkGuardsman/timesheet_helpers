@@ -1,6 +1,6 @@
 import fileSystem from "fs";
 import dateTime from 'date-and-time'
-import {sum, groupBy} from "lodash";
+import lodash from "lodash";
 import {formatTime, outputFormat} from "./Helpers.mjs";
 
 /**
@@ -25,16 +25,20 @@ export function loadFileAsObjects(filePathIn) {
     const timeEntries = processTimeTracking(date, rawLines);
 
     //Convert to project entries
-    const projectHours = processProjectTimes(timeEntries)
+    const projectHours = processProjectTimes(timeEntries);
+
+    const oooEntry = projectHours.filter(etr => etr.name === "OOO");
+    const outOfOffice = oooEntry.length === 0 ? 0 : oooEntry[0].hours;
 
     return {
         file: filePathIn,
         date,
         timeEntries,
         projectHours,
+        outOfOffice,
         timeStart: timeEntries[0].startTime,
         timeEnd: timeEntries[timeEntries.length - 1].endTime,
-        totalHours: sum(timeEntries.map(entry => entry.timeAsHours))
+        totalHours: lodash.sum(timeEntries.map(entry => entry.timeAsHours)) - outOfOffice
     }
 }
 
@@ -46,14 +50,15 @@ export function loadFileAsObjects(filePathIn) {
  */
 function processProjectTimes(timeEntries) {
     const asProjects = timeEntries.map(entry => {
+        const name = entry.project.toLowerCase();
         return {
-            name: entry.project.toLowerCase(),
+            name: name === "-" ? "OOO" : name,
             hours: entry.timeAsHours
         }
     });
-    const projectMap = groupBy(asProjects, "name");
+    const projectMap = lodash.groupBy(asProjects, "name");
     return Object.keys(projectMap).map(key => {
-        const hours = sum(projectMap[key].map(etr => etr.hours));
+        const hours = lodash.sum(projectMap[key].map(etr => etr.hours));
         return {
             name: key,
             hours
@@ -80,7 +85,7 @@ function processTimeTracking(date, lines) {
         const entry = lineObjects[index].startTime;
 
         if (prevEntry !== entry) {
-            throw new Error(`Start date of line ${index - 1} doesn't match next line for file with date ${date}`);
+            throw new Error(`Start date of line ${index - 1} doesn't match next line for file with date ${date}. Line: ${prevEntry} .. ${entry}`);
         }
     }
 

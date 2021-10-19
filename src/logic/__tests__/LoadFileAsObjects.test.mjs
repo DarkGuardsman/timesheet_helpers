@@ -29,6 +29,7 @@ it('load single file', () => {
         {
             "date": "08_14_2021",
             "file": "some/path/on/local/08 - August/08_14_2021.md",
+            "outOfOffice" : 0,
             "projectHours": [
                 {
                     "hours": 0.5,
@@ -118,7 +119,9 @@ it('load several files', () => {
             "| Event | Type | Project | Start | End | Notes |\n" +
             "| - | - | - | - | - | - | - |\n" +
             "| HouseKeeping | Work | Admin | 7 AM | 7:30 AM | Email, GitLab, Jira, etc |\n" +
-            "| TASK-1234 | Work | Ad-Hoc | 7:30 AM | 4:30 PM |  |\n" +
+            "| TASK-1234 | Work | Ad-Hoc | 7:30 AM | 12:35 PM |  |\n" +
+            "| Lunch | OOO | - | 12:35 PM | 1:35 PM |  |\n" +
+            "| TASK-1234 | Work | Ad-Hoc | 1:35 PM | 4:30 PM |  |\n" +
 
             "## Up next \n\n" +
             "| Standup | Work | Admin | 8:30 AM | 8:30 AM | |\n" +
@@ -140,6 +143,7 @@ it('load several files', () => {
             {
                 "date": "08_14_2021",
                 "file": "some/path/on/local/08 - August/08_14_2021.md",
+                "outOfOffice": 0,
                 "projectHours": [
                     {
                         "hours": 0.5,
@@ -192,6 +196,7 @@ it('load several files', () => {
             {
                 "date": "08_15_2021",
                 "file": "some/path/on/local/08 - August/08_15_2021.md",
+                "outOfOffice": 0,
                 "projectHours": [
                     {
                         "hours": 0.5,
@@ -233,14 +238,19 @@ it('load several files', () => {
             {
                 "date": "08_16_2021",
                 "file": "some/path/on/local/08 - August/08_16_2021.md",
+                "outOfOffice": 1,
                 "projectHours": [
                     {
                         "hours": 0.5,
                         "name": "admin"
                     },
                     {
-                        "hours": 9,
+                        "hours": 8,
                         "name": "ad-hoc"
+                    },
+                    {
+                        "hours": 1,
+                        "name": "OOO"
                     }
                 ],
                 "timeEnd": "4:30:00 PM",
@@ -258,18 +268,40 @@ it('load several files', () => {
                     },
                     {
                         "date": "08_16_2021",
-                        "endTime": "4:30:00 PM",
+                        "endTime": "12:35:00 PM",
                         "event": "TASK-1234",
                         "index": 1,
                         "project": "Ad-Hoc",
                         "startTime": "7:30:00 AM",
-                        "timeAsHours": 9,
-                        "timeAsMinutes": 540,
+                        "timeAsHours": 5.083333333333333,
+                        "timeAsMinutes": 305,
+                        "type": "Work"
+                    },
+                    {
+                        "date": "08_16_2021",
+                        "endTime": "1:35:00 PM",
+                        "event": "Lunch",
+                        "index": 2,
+                        "project": "-",
+                        "startTime": "12:35:00 PM",
+                        "timeAsHours": 1,
+                        "timeAsMinutes": 60,
+                        "type": "OOO"
+                    },
+                    {
+                        "date": "08_16_2021",
+                        "endTime": "4:30:00 PM",
+                        "event": "TASK-1234",
+                        "index": 3,
+                        "project": "Ad-Hoc",
+                        "startTime": "1:35:00 PM",
+                        "timeAsHours": 2.9166666666666665,
+                        "timeAsMinutes": 175,
                         "type": "Work"
                     }
                 ],
                 "timeStart": "7:00:00 AM",
-                "totalHours": 9.5
+                "totalHours": 8.5
             }
         ]
     );
