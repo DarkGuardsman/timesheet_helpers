@@ -57,13 +57,15 @@ function processProjectTimes(timeEntries) {
         }
     });
     const projectMap = lodash.groupBy(asProjects, "name");
-    return Object.keys(projectMap).map(key => {
-        const hours = lodash.sum(projectMap[key].map(etr => etr.hours));
-        return {
-            name: key,
-            hours
-        }
-    })
+    return Object.keys(projectMap)
+        .filter(key => key !== 'gap') //Ignore actual gaps
+        .map(key => {
+            const hours = lodash.sum(projectMap[key].map(etr => etr.hours));
+            return {
+                name: key,
+                hours
+            }
+        })
 }
 
 /**
@@ -92,7 +94,7 @@ function processTimeTracking(date, lines) {
     //TODO process to check for invalid projects
     //TODO check for time bleeding over into the next day Ex: 11:00pm - 1:20 am
 
-    return lineObjects
+    return lineObjects.filter(etr => etr.project.toLowerCase() !== 'gap')
 }
 
 /**
