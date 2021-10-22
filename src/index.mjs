@@ -7,9 +7,10 @@ console.log('Args', process.argv);
 const argv = minimist(process.argv.slice(2));
 
 //Arguments
-const filesInPath = argv.input.split(",");
-const outputFilePath = argv.outputPath.trim();
-const outputFileName = argv.outputName.trim();
+const filesInPath = argv.input.split(","); //Inputs
+const inputFilePath = argv.inputPath != null ? argv.inputPath.trim() : ""; //Prefix for inputs
+const outputFilePath = argv.outputPath.trim(); //Prefix for output path
+const outputFileName = argv.outputName.trim(); //File name prefix for output
 
 if(outputFileName.indexOf("/") !== -1) {
     throw new Error("Output name contains file path '/'");
@@ -18,7 +19,7 @@ if(outputFileName.indexOf("/") !== -1) {
 console.log('INPUT', filesInPath);
 
 try {
-    const timeEntries = loadMultiFileAsObjects(filesInPath);
+    const timeEntries = loadMultiFileAsObjects(filesInPath.map(path => `${inputFilePath}${path}`));
     writeFileFromObject(outputFilePath, outputFileName, timeEntries);
 
 } catch (err) {
