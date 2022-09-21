@@ -8,6 +8,7 @@
     "lint:check": "./node_modules/.bin/eslint src --debug",
     "lint:fix": "./node_modules/.bin/eslint src --fix"
   },
+  "bin": "src/index.mjs",
   "main": "src/index.mjs",
   "license": "ARR",
   "dependencies": {
