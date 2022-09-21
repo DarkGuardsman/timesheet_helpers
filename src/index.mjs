@@ -1,6 +1,6 @@
 import minimist from 'minimist'
-import {get} from 'lodash';
-import {MONTHS} from "./consts.js";
+import Lodash from 'lodash';
+import {MONTHS} from "./consts.mjs";
 import {
     formatPatternConfig,
     getConfig,
@@ -22,13 +22,13 @@ const argv = minimist(process.argv.slice(2));
 if(argv.mode === "2" || argv.mode === null || argv.mode === undefined) {
     const logRoot = getLogSystemRoot(argv);
     const config= getConfig(argv, logRoot);
-    const folderPattern = get(config, "folderPattern", "./$YEAR/$MONTH_2 - $MONTH_NAME/")
-    const filePattern = get(config, "filePattern", "./$MONTH_2_$DAY_2_$YEAR.md");
-    const outputFolderPattern = get(config, "outputFolderPattern", "./$YEAR/$MONTH_2 - $MONTH_NAME/");
-    const outputFilePattern = get(config, "outputFilePattern", "Timesheet $RANGE_START - $RANGE_END");
+    const folderPattern = Lodash.get(config, "folderPattern", "./$YEAR$/$MONTH_2$ - $MONTH_NAME$/")
+    const filePattern = Lodash.get(config, "filePattern", "./$MONTH_2$_$DAY_2$_$YEAR$.md");
+    const outputFolderPattern = Lodash.get(config, "outputFolderPattern", "./$YEAR$/$MONTH_2$ - $MONTH_NAME$/");
+    const outputFilePattern = Lodash.get(config, "outputFilePattern", "Timesheet $RANGE_START_MONTH$-$RANGE_START_DAY$ to $RANGE_END_MONTH$-$RANGE_END_DAY$");
 
     const year = getYearArgument(argv);
-    const month = getMonthArgument(argv);
+    const monthDefault = getMonthArgument(argv);
     const range = getDateRange(argv).split("-");
 
     if(range.length !== 2) {
@@ -38,9 +38,9 @@ if(argv.mode === "2" || argv.mode === null || argv.mode === undefined) {
     const formattingOptions = {
         PATH: logRoot,
         YEAR: year,
-        MONTH: month, // 1
-        MONTH_2: `${month}`.padStart(2, "0"), // 01
-        MONTH_NAME: MONTHS[month - 1], // January
+        MONTH: monthDefault, // 1
+        MONTH_2: `${monthDefault}`.padStart(2, "0"), // 01
+        MONTH_NAME: MONTHS[monthDefault - 1], // January
         RANGE: range, // 1/1-1/5
         RANGE_START: range[0],
         RANGE_END: range[1]
@@ -54,9 +54,9 @@ if(argv.mode === "2" || argv.mode === null || argv.mode === undefined) {
     const possibleFiles = days.map(day => {
         const formatDayOptions = {
             ...formattingOptions,
-            MONTH: month, // 1
-            MONTH_2: `${month}`.padStart(2, "0"), // 01
-            MONTH_NAME: MONTHS[month - 1], // January
+            MONTH: day.month, // 1
+            MONTH_2: `${day.month}`.padStart(2, "0"), // 01
+            MONTH_NAME: MONTHS[day.month - 1], // January
             DAY: day.day,
             DAY_2: `${day.day}`.padStart(2, "0")
         };
@@ -68,6 +68,11 @@ if(argv.mode === "2" || argv.mode === null || argv.mode === undefined) {
     });
 
     const actualFiles = possibleFiles.filter(path => fs.existsSync(path));
+
+    console.log("\nFiles:")
+    actualFiles.forEach((filePath) => {
+        console.log(`\t${filePath}`);
+    })
 
     try {
         const timeEntries = loadMultiFileAsObjects(actualFiles);

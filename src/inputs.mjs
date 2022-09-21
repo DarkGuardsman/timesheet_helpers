@@ -17,7 +17,7 @@ export function getYearArgument(argv) {
     if(value === undefined || value === null) {
         return new Date().getFullYear();
     }
-    return Number.parseInt(value.trim(), 10);
+    return Number.parseInt(value, 10);
 }
 
 export function getMonthArgument(argv) {
@@ -38,7 +38,7 @@ export function getDateRange(argv) {
 
 export function getConfig(argv, rootPath) {
     let configPath = argv.config;
-    if (value === undefined || value === null) {
+    if (configPath === undefined || configPath === null) {
         configPath = `${rootPath}/timesheet-settings.json`;
     }
     else if(configPath.startsWith('./')) {
@@ -57,11 +57,13 @@ export function getConfig(argv, rootPath) {
 export function formatPatternConfig(pattern, replacementOptions) {
     let outputString = pattern.trim();
     if(outputString.startsWith("./")) {
-        outputString = `${replacementOptions.PATH}/${outputString.substring(2, outputString.length)}`;
+        const pathInsert = replacementOptions.PATH.endsWith("/") ? "" : "/";
+        const pathSub = outputString.substring(2, outputString.length);
+        outputString = `${replacementOptions.PATH}${pathInsert}${pathSub}`;
     }
-    replacementOptions.forEach((option) => {
-        const {key, value} = option;
-        outputString = value.replaceAll(`$${key}`, value);
+    Object.keys(replacementOptions).forEach((key) => {
+        const value = replacementOptions[key];
+        outputString = outputString.replace(`$${key}$`, value);
     });
     return outputString;
 }
