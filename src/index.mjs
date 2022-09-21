@@ -42,8 +42,10 @@ if(argv.mode === "2" || argv.mode === null || argv.mode === undefined) {
         MONTH_2: `${monthDefault}`.padStart(2, "0"), // 01
         MONTH_NAME: MONTHS[monthDefault - 1], // January
         RANGE: range, // 1/1-1/5
-        RANGE_START: range[0],
-        RANGE_END: range[1]
+        RANGE_START_MONTH: range[0].split("/")[0],
+        RANGE_START_DAY: range[0].split("/")[1],
+        RANGE_END_MONTH: range[1].split("/")[0],
+        RANGE_END_DAY: range[1].split("/")[1]
     }
 
     const outputFolderPath = formatPatternConfig(outputFolderPattern, formattingOptions);
