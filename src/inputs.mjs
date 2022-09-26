@@ -23,7 +23,7 @@ export function getYearArgument(argv) {
 export function getMonthArgument(argv) {
     const value = argv.month;
     if(value === undefined || value === null) {
-        return new Date().getMonth();
+        return new Date().getMonth() + 1;
     }
     return Number.parseInt(value.trim(), 10);
 }
