@@ -25,6 +25,13 @@ export function getMonthArgument(argv) {
     if(value === undefined || value === null) {
         return new Date().getMonth() + 1;
     }
+
+    // Seems to auto parse args as numeric if possible
+    if(Number.isInteger(value)) {
+        return value;
+    }
+
+    // Mostly exists to fix "XX "
     return Number.parseInt(value.trim(), 10);
 }
 
